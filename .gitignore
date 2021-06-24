@@ -1,3 +1,4 @@
 *.pyc
 OldVersions/
 lockfile.lck
+PyIK/src/Logs/*

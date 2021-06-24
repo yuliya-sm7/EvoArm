@@ -112,7 +112,7 @@ class Kinectics:
         except IOError as e:
             print("No 'Logs/' folder available: Performance logging disabled")
             self.perflog = None
-        self.time_start = time.clock()
+        self.time_start = time.perf_counter()
 
         # Find the available servos through the attached board
         comm = self.connectController()
@@ -157,7 +157,7 @@ class Kinectics:
         self.ikOffset = np.array([0.,0.,0.])
 
         self.lerpSpeed = 0
-        self.lerpTimer = time.clock()
+        self.lerpTimer = time.perf_counter()
         self.lastPose = None
 
         # render the reachable area
@@ -173,7 +173,7 @@ class Kinectics:
             self.perflog.write('ik_avg {0}\n'.format(self.ik_time_accum/self.ik_time_counter))
             self.perflog.write('serial_avg {0}\n'.format(self.serial_time_accum/self.serial_time_counter))
             self.perflog.write('render_avg {0}\n'.format(self.render_time_accum/self.render_time_counter))
-            self.perflog.write('runtime {0}\n'.format(time.clock()-self.time_start))
+            self.perflog.write('runtime {0}\n'.format(time.perf_counter()-self.time_start))
             self.perflog.close()
         self.sockIn.close()
         self.sockOut.close()
@@ -218,13 +218,13 @@ class Kinectics:
             sensor = '\0\0\0\0'
         realPose = self.arm.getRealPose()
         if realPose is not None:
-            self.sockOut.send(realPose.serialize() + sensor)
+            self.sockOut.send(realPose.serialize() + str.encode(sensor))
         else:
-            self.sockOut.send(self.arm.getIKPose().serialize() + sensor)
+            self.sockOut.send(self.arm.getIKPose().serialize() + str.encode(sensor))
 
     def resetIKTarget(self, target):
         # Reset lerp timer
-        self.lerpTimer = time.clock()
+        self.lerpTimer = time.perf_counter()
         # Reset lerp speed to 0
         self.lerpSpeed = 0.0
         # Clear error buildup
@@ -234,7 +234,7 @@ class Kinectics:
 
     def lerpIKTarget(self):
         # Scales with time delta
-        now = time.clock()
+        now = time.perf_counter()
         dt = now - self.lerpTimer
         self.lerpTimer = now
 
@@ -311,10 +311,10 @@ class Kinectics:
                 self.resetIKTarget(real_pose.effector)
 
         # IK - calculate swing and elbow pos using goal pos
-        timer = time.clock()
+        timer = time.perf_counter()
         self.arm.setWristGoalPosition(self.ikTarget)
         self.arm.setWristGoalDirection(self.goalNormal)
-        self.ik_time_accum += time.clock()-timer
+        self.ik_time_accum += time.perf_counter()-timer
         self.ik_time_counter += 1
 
         pose = self.arm.getIKPose()
@@ -343,9 +343,9 @@ class Kinectics:
         self.lastPose = pose
         # Drive the main arm
         self.arm.setTargetPose(pose)
-        timer = time.clock()
+        timer = time.perf_counter()
         self.arm.tick()
-        self.serial_time_accum += time.clock()-timer
+        self.serial_time_accum += time.perf_counter()-timer
         self.serial_time_counter += 1
         # Update the last known valid goal
         self.lastValidGoal = np.array(self.ikTarget)
@@ -362,7 +362,7 @@ class Kinectics:
 
     def displayServoPositions(self, col, pos):
         i = 0
-        for (name,servo) in self.servos.iteritems():
+        for (name,servo) in self.servos.items():
             if servo is None:
                 continue
             text = "{name} [{id}]: {d:.3f} deg".format(
@@ -373,7 +373,7 @@ class Kinectics:
             i += 1
 
     def drawViews(self, pose):
-        timer = time.clock()
+        timer = time.perf_counter()
 
         # Find the reachable arc for this height
         arc = self.reachableVolume.getRadii(pose.effector[1])
@@ -403,7 +403,7 @@ class Kinectics:
         # Display servo positions
         self.displayServoPositions(black, [400, 20])
         # Store the render timing
-        self.render_time_accum += time.clock() - timer
+        self.render_time_accum += time.perf_counter() - timer
         self.render_time_counter += 1
 
 

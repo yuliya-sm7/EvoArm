@@ -204,7 +204,7 @@ class ArmController:
         self.servos["elbow"] = servo_elbow
         self.servos["wrist_x"] = servo_wrist_x
         self.servos["wrist_y"] = servo_wrist_y
-        for key, servo in self.servos.iteritems():
+        for key, servo in self.servos.items():
             if servo is None:
                 print ("Warning: {0} servo not connected".format(key))
             else:
@@ -296,7 +296,7 @@ class ArmController:
 
     def pollServos(self):
         """Poll the real-world servo positions"""
-        for servo in self.servos.itervalues():
+        for servo in self.servos.values():
             if servo is not None:
                 newPos = servo.getPosition()
                 if type(newPos) is float:
@@ -304,7 +304,7 @@ class ArmController:
 
     def clearPositionError(self):
         """Clears the servo's position-error accumulators"""
-        for servo in self.servos.itervalues():
+        for servo in self.servos.values():
             if servo is not None and servo.protocol == 1:
                 servo.data['error'] = 0.0
 
@@ -312,7 +312,7 @@ class ArmController:
         """Retrieve the real-world arm pose, or None if not all servos are
         connected.
         """
-        if any([servo is None for servo in self.servos.itervalues()]):
+        if any([servo is None for servo in self.servos.values()]):
             return None
 
         # This whole function is essentially just FK based on the known servo

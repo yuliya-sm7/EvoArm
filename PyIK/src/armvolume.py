@@ -11,8 +11,8 @@ class ArmVolume:
 
         self.y_step = self.size[1]/float(res)
         self.x_step = self.size[0]/float(res)
-        for y in xrange(res):
-            for x in xrange(res):
+        for y in range(res):
+            for x in range(res):
                 pos = [0, (y-res/2)*self.y_step, offset + x*self.x_step]
                 self.samples[x,y] = self.trueValid(arm, pos)
 
@@ -21,7 +21,7 @@ class ArmVolume:
 
         min = 0
         max = None
-        for x in xrange(self.res):
+        for x in range(self.res):
             if max is None:
                 if not self.samples[x, y_ind]:
                     min = self.offset + x*self.x_step

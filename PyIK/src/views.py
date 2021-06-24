@@ -52,8 +52,8 @@ class PlaneView:
 
         y_step = volume.size[1]/float(res)
         x_step = volume.size[0]/float(res)
-        for y in xrange(res):
-            for x in xrange(res):
+        for y in range(res):
+            for x in range(res):
                 if volume.samples[x, y]:
                     # reachable pixel
                     renderSurface.set_at((x,res-y-1), VOLUME_COL)
@@ -66,7 +66,7 @@ class PlaneView:
     def drawBack(self, pose, r):
         if self.backSurface is not None:
             # render the reachable area
-            r.surf.blit(self.backSurface, pt_l([self.reachableXOffset,self.backSize/2]))
+            r.surf.blit(self.backSurface, pt_l([self.reachableXOffset,self.backSize//2]))
 
     def draw(self, pose, r):
         # Y axis
@@ -199,11 +199,11 @@ class TopView:
         # Wrist is drawn below everything
         r.drawLine(pt_r(wrist), pt_r(effector), col, self.line_width)
         #r.drawCircle(pt_r(wrist), self.line_width/2, gray)
-        r.drawCircle(pt_r(effector), self.line_width/2, gray)
+        r.drawCircle(pt_r(effector), self.line_width//2, gray)
 
         r.drawLine(pt_r(shoulder), pt_r(elbow), col, self.line_width)
         r.drawCircle(pt_r(shoulder), self.line_width, gray)
-        r.drawLine(pt_r(elbow), pt_r(wrist), col, self.line_width/2)
+        r.drawLine(pt_r(elbow), pt_r(wrist), col, self.line_width//2)
         # Elbow joint is above everything
         r.drawCircle(pt_r(elbow), self.line_width, gray)
 

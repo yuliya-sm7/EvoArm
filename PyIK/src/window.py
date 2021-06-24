@@ -26,12 +26,12 @@ class Renderer:
         pyg.draw.circle(self.surf, color, c, r)
 
     def drawLine(self, p1, p2, color, width=1):
-        pyg.draw.line(self.surf, color, p1, p2, width)
+        pyg.draw.line(self.surf, color, p1, p2, int(width))
 
     def drawArc(self, color, center, dim, start_angle, end_angle, width):
         pyg.draw.arc(self.surf,
                      color,
-                     pyg.Rect(center[0]-dim/2, center[1]-dim/2, dim, dim),
+                     pyg.Rect(center[0]-dim//2, center[1]-dim//2, dim, dim),
                      start_angle,
                      end_angle,
                      width)

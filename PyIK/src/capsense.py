@@ -31,6 +31,6 @@ class CapacitiveSensor:
     def mean(self, n = WINDOW_SIZE):
         sum = 0.0
         count = min(len(self.readings), n)
-        for i in xrange(count):
+        for i in range(count):
             sum += self.readings[-i]
         return sum / count

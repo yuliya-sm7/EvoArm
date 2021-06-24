@@ -1,5 +1,5 @@
 import sys
-import StringIO
+from io import StringIO
 
 import numpy as np
 
@@ -63,9 +63,9 @@ def printVec(vec):
 
 def prettyVec(vec):
     """Pretty-format a floating point vector/np array"""
-    out = StringIO.StringIO()
+    out = StringIO()
     out.write('[')
-    for i in xrange(len(vec)):
+    for i in range(len(vec)):
         out.write('{0:.2f}'.format(vec[i]))
         if i < len(vec) - 1:
             out.write(', ')
